@@ -1,4 +1,4 @@
-Ordering Grocery – Winform application
+Ordering Grocery â€“ Winform application
 
 Simple placing an order of groceries application created with Python 3.11
 
@@ -7,7 +7,7 @@ Simple placing an order of groceries application created with Python 3.11
 * [Technologies](#technologies)
 * [Setup](#setup)
 * [Features](#features)
-* [Project status)(#project-status)
+* [Project status](#project-status)
 * [Sources](#sources)
 ##	General info
 	A program to place an order and set an appointment for delivery of goods from a grocery store.
