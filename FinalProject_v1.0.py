@@ -170,13 +170,14 @@ btPlaceOrder.grid(row = 4, column = 0, columnspan = 3,  pady = 5, sticky = "ns")
 
 # configure row and column of rFrame to layout
 rFrame.grid_columnconfigure(0, weight=1)
+
 # create controls in right frame
-lReceiptTitle = ttk.Label(rFrame, text = "Receipt",font = titleFont, foreground = "#e6ffe6",background="#003300",)
-lReceiptTitle.grid(row = 0, column = 0, sticky="nsew")
-fReceipt  = ttk.Frame(rFrame)
-fReceipt.grid(row = 1,column = 0,sticky = "nw" )
-lReceipt = ttk.Label(fReceipt, width = 50, text = productListChoice, background="#fff")
-lReceipt.grid(row = 1, column = 0, padx = 10, pady = 5)
+lReceiptTitle = ttk.Label(rFrame,  font = titleFont, text = "Receipt",foreground = "#e6ffe6",background="#003300")
+lReceiptTitle.grid(row = 0, column = 0, sticky="nwe")
+fReceipt  = tk.Frame(rFrame, background = '#e6ffe6', highlightbackground= '#004d00', highlightthickness=1)
+fReceipt.grid(row = 1,column = 0,sticky = "nwe" )
+lReceipt = ttk.Label(fReceipt,font=("Times New Roman", 11, "normal"),text = productListChoice, background="#fff")
+lReceipt.grid(row = 1, column = 0, padx = 10, pady = 5, sticky="nwe")
 
 main.mainloop()
 
