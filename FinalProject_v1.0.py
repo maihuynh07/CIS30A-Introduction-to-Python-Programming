@@ -56,7 +56,6 @@ vChoiceList = tk.StringVar()    # variable to link to text of label lChoiceList 
 
 # function: handler event when change selected item in combobox products or when press enter keys on combobox
 def addProduct():
-    lReceipt.config(text=vChoiceList)	# set text for labelReceipt
     choiceProduct = productList[cbbProducts.current()]  # get selected item
     vChoiceList.set(vChoiceList.get() + vProductChoice.get() + " $"+ str(choiceProduct.price) +"\n") # set variable that links to lProductChoice
     productListChoice.append(choiceProduct) # add choosen product from combobox into list choice product to list of choosen products
@@ -65,12 +64,13 @@ def addProduct():
 # function: save to file and display receipt
 def saveOrder():
     order = mc.Order(vCustomerName.get(), vCustomerAddress.get(), vCustomerEmail.get(),productListChoice,vDeliveryDate.get())
-    lReceipt.config(text = order.displayOrder())
+    lReceipt.insert(0.0,order.displayOrder())
+    #lReceipt.config(text = order.displayOrder())
     order.removeOrder()
 #--------------------------------------------------------------------------------------------------------------------  
 
 #------------------------------------------------------Controls------------------------------------------------------ 
-# configure row and column to layout page
+# configure row and column to layout form
 main.grid_columnconfigure(0, weight = 1)    # config column 0
 main.grid_columnconfigure(1, weight = 1)    # config column 1
 main.grid_rowconfigure(0, weight = 1)       # config row 0
@@ -161,7 +161,7 @@ fProducts.grid_columnconfigure(0, weight=1)
 titleProductInfo.grid(row = 0, column = 0, sticky="nw", padx = 5, pady = 15)
 lProductName.grid(row = 1, column = 0, padx = 10, pady = 5, sticky = "nw")
 cbbProducts.grid(row = 1, column = 1,  padx = 10, pady = 5, sticky = "nw")
-btAddProduct.grid(row = 2, column = 0, padx = 10, pady = 5, sticky = "nsew")
+btAddProduct.grid(row = 2, column = 0, padx = 5, pady = 5, sticky = "nsew")
 lChoiceList.grid(row = 2, column = 1, padx = 10, pady = 5, sticky = "nse")
 lCalendar.grid(row = 3, column = 0, padx = 10, pady = 5, sticky = "nw")
 calendar.grid(row = 3, column = 1, padx = 10, pady = 5, sticky = "nw")
@@ -170,14 +170,18 @@ btPlaceOrder.grid(row = 4, column = 0, columnspan = 3,  pady = 5, sticky = "ns")
 
 # configure row and column of rFrame to layout
 rFrame.grid_columnconfigure(0, weight=1)
-
-# create controls in right frame
+# create controls in right framw
 lReceiptTitle = ttk.Label(rFrame,  font = titleFont, text = "Receipt",foreground = "#e6ffe6",background="#003300")
 lReceiptTitle.grid(row = 0, column = 0, sticky="nwe")
 fReceipt  = tk.Frame(rFrame, background = '#e6ffe6', highlightbackground= '#004d00', highlightthickness=1)
 fReceipt.grid(row = 1,column = 0,sticky = "nwe" )
-lReceipt = ttk.Label(fReceipt,font=("Times New Roman", 11, "normal"),text = productListChoice, background="#fff")
-lReceipt.grid(row = 1, column = 0, padx = 10, pady = 5, sticky="nwe")
+lReceipt = tk.Text(fReceipt,font=("Times New Roman", 11, "normal"),background="#fff")
+lReceipt.grid(row = 1, column = 0, padx = 10, pady = 5, sticky="nswe")
+
+scrollbar = ttk.Scrollbar(fReceipt, orient='horizontal', command=lReceipt.xview)
+scrollbar.grid(row=0, column=1, sticky=tk.NS)
+#  communicate back to the scrollbar
+lReceipt['xscrollcommand'] = scrollbar.set
 
 main.mainloop()
 
