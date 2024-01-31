@@ -137,7 +137,7 @@ lCalendar = ttk.Label(fProducts, text="Choose delivery date", background = "#e6f
 calendar = DateEntry(fProducts, width=12, background='darkblue',
                     foreground='white', borderwidth=2, textvariable = vDeliveryDate
                     ,maxdate = dt+ timedelta(days = 365)
-                    ) # calendar to choose a delivery date
+                    ) # calendar to choose a delivery date, limit in 1 year
 
 # combobox list of products
 lProductName = ttk.Label(fProducts,text="Choose a product", background = "#e6ffe6", foreground = "#003300")
