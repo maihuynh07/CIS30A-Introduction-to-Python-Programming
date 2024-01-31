@@ -59,14 +59,13 @@ def addProduct():
     choiceProduct = productList[cbbProducts.current()]  # get selected item
     vChoiceList.set(vChoiceList.get() + vProductChoice.get() + " $"+ str(choiceProduct.price) +"\n") # set variable that links to lProductChoice
     productListChoice.append(choiceProduct) # add choosen product from combobox into list choice product to list of choosen products
-    lChoiceList.config(text = vChoiceList.get()) # add currently choosen products to display in lable lProductChoice
+    lChoiceList.insert(tk.END,vProductChoice.get() + " $"+ str(choiceProduct.price)+"\n") # insert selected item to lChoiceList at the lastest position
 
 # function: save to file and display receipt
 def saveOrder():
     order = mc.Order(vCustomerName.get(), vCustomerAddress.get(), vCustomerEmail.get(),productListChoice,vDeliveryDate.get())
-    lReceipt.insert(0.0,order.displayOrder())
-    #lReceipt.config(text = order.displayOrder())
-    order.removeOrder()
+    txtReceipt.insert(0.0,order.displayOrder()) # display receipt in txtReceipt
+    order.removeOrder() # using for demo, remove file after display receipt
 #--------------------------------------------------------------------------------------------------------------------  
 
 #------------------------------------------------------Controls------------------------------------------------------ 
@@ -87,7 +86,7 @@ cFrame.grid(row = 1, column = 0, sticky = "nswe")
 # configure row and column of cFrame to layout
 cFrame.grid_rowconfigure(0, weight = 1)
 cFrame.grid_columnconfigure(0, weight = 1)
-cFrame.grid_columnconfigure(1, weight = 1)
+cFrame.grid_columnconfigure(1, weight = 2)
 
 # place and display lFrame and rFrame into its position
 lFrame.grid(row = 0, column = 0, sticky = "nswe")
@@ -97,8 +96,8 @@ rFrame.grid(row = 0, column = 1, sticky = "nswe")
 # configure row and column of lFrame to layout
 lFrame.grid_columnconfigure(0, weight=1)
 lFrame.grid_rowconfigure(0, weight=1)
-lFrame.grid_rowconfigure(1, weight=5)
-lFrame.grid_rowconfigure(2, weight=5)
+lFrame.grid_rowconfigure(1, weight=2)
+lFrame.grid_rowconfigure(2, weight=2)
 
 # create main controls in left frame
 titleFont = ("Comic Sans MS", 13, "bold")
@@ -107,7 +106,7 @@ fProducts = tk.Frame(lFrame, background = '#e6ffe6', borderwidth = 1)
 lOrder = ttk.Label(lFrame, text = "Order",font = titleFont, foreground = "#e6ffe6",background="#003300") # welcome message
 lOrder.grid (row = 0, column = 0, sticky = "nsew")
 fCustomer.grid(row = 1,column = 0, sticky = "nswe")
-fProducts.grid(row = 2,column = 0, sticky = "sw")
+fProducts.grid(row = 2,column = 0, sticky = "nsw")
 
 # create controls in frame customer info (fCustomer)
 subTitleFont = ("Comic Sans MS", 12, "bold")
@@ -136,34 +135,42 @@ eCustomerEmail.grid(row = 3, column = 1, padx = 0, pady = 5, sticky="nw")
 titleProductInfo = ttk.Label(fProducts, text="Items", font = subTitleFont, background = "#e6ffe6", foreground = "#003300") 
 lCalendar = ttk.Label(fProducts, text="Choose delivery date", background = "#e6ffe6", foreground = "#003300")
 calendar = DateEntry(fProducts, width=12, background='darkblue',
-                    foreground='white', borderwidth=2, textvariable = vDeliveryDate) # calendar to choose a delivery date
+                    foreground='white', borderwidth=2, textvariable = vDeliveryDate
+                    ,maxdate = dt+ timedelta(days = 365)
+                    ) # calendar to choose a delivery date
 
 # combobox list of products
 lProductName = ttk.Label(fProducts,text="Choose a product", background = "#e6ffe6", foreground = "#003300")
-cbbProducts = ttk.Combobox(fProducts, width=80, height=50, textvariable = vProductChoice)   # combobox contains products
+cbbProducts = ttk.Combobox(fProducts, height=50, textvariable = vProductChoice)   # combobox contains products
 cbbProducts['values'] = [str(x.productID)+"-"+x.name for x in productList]  # add data for combobox dropdownlist
 
 # load image using for image button
 cwd = os.path.dirname(os.path.abspath(__file__))    # get current directory of current source file
 buttonImage = ImageTk.PhotoImage(Image.open(cwd+r"\images\button_rect.png").resize((120,50)))
 # button to add a new choosen product
-btAddProduct = tk.Button(fProducts,text="Add", command = addProduct, image = buttonImage, compound = "center", borderwidth = 0, background = "#e6ffe6")
+btAddProduct = tk.Button(fProducts,text="Add product", command = addProduct, image = buttonImage, compound = "center", borderwidth = 0, background = "#e6ffe6")
 # label to display list of choosen products
-lChoiceList = tk.Label(fProducts, width = 80, text = "", textvariable = vChoiceList, background = "white", highlightthickness=1, highlightcolor="#fff", highlightbackground= '#002200', borderwidth = 2)
+# lChoiceList = tk.Label(fProducts, width = 50, text = "", textvariable = vChoiceList, background = "white", highlightthickness=1, highlightcolor="#fff", highlightbackground= '#002200', borderwidth = 2)
+lChoiceList = tk.Text(fProducts,font=("Times New Roman", 11, "normal"), background="#fff", height=5)
+# add scrollbar to text receipt
+scrollbar2 = tk.Scrollbar(fProducts, orient = 'vertical', width=15,command = lChoiceList.yview, highlightbackground = "#e6ffe6", border = 1 )
 # button place order
 btPlaceOrder = tk.Button(fProducts,text="Place order",  command = saveOrder, image = buttonImage, compound = "center", borderwidth = 0, height=33, background = "#e6ffe6")
 
-# configure row and column of fProducts to layout
-fProducts.grid_rowconfigure(1, weight=1)
+# configure column and row of frame customer info (fCustomer)
 fProducts.grid_columnconfigure(0, weight=1)
+fProducts.grid_columnconfigure(1, weight=10)
+fProducts.grid_columnconfigure(2, weight=1)
 
 # place and display controls of fProducts
 titleProductInfo.grid(row = 0, column = 0, sticky="nw", padx = 5, pady = 15)
 lProductName.grid(row = 1, column = 0, padx = 10, pady = 5, sticky = "nw")
-cbbProducts.grid(row = 1, column = 1,  padx = 10, pady = 5, sticky = "nw")
+cbbProducts.grid(row = 1, column = 1,  padx = 10, pady = 5, sticky = "nwe")
 btAddProduct.grid(row = 2, column = 0, padx = 5, pady = 5, sticky = "nsew")
-lChoiceList.grid(row = 2, column = 1, padx = 10, pady = 5, sticky = "nse")
-lCalendar.grid(row = 3, column = 0, padx = 10, pady = 5, sticky = "nw")
+lChoiceList.grid(row = 2, column = 1, padx = 10, pady = 5, sticky = "nsw")
+lChoiceList['yscrollcommand'] = scrollbar2.set # link scrollbar2 back to lChoiceList
+scrollbar2.grid(row = 2, column = 2, padx = 2, pady = 5, sticky = "nsew")
+lCalendar.grid(row = 3, column = 0, padx = 5, pady = 5, sticky = "nw")
 calendar.grid(row = 3, column = 1, padx = 10, pady = 5, sticky = "nw")
 btPlaceOrder.grid(row = 4, column = 0, columnspan = 3,  pady = 5, sticky = "ns")
 
@@ -175,13 +182,17 @@ lReceiptTitle = ttk.Label(rFrame,  font = titleFont, text = "Receipt",foreground
 lReceiptTitle.grid(row = 0, column = 0, sticky="nwe")
 fReceipt  = tk.Frame(rFrame, background = '#e6ffe6', highlightbackground= '#004d00', highlightthickness=1)
 fReceipt.grid(row = 1,column = 0,sticky = "nwe" )
-lReceipt = tk.Text(fReceipt,font=("Times New Roman", 11, "normal"),background="#fff")
-lReceipt.grid(row = 1, column = 0, padx = 10, pady = 5, sticky="nswe")
 
-scrollbar = ttk.Scrollbar(fReceipt, orient='horizontal', command=lReceipt.xview)
-scrollbar.grid(row=0, column=1, sticky=tk.NS)
+fReceipt.grid_columnconfigure(0, weight=5)
+fReceipt.grid_columnconfigure(0, weight=1)
+txtReceipt = tk.Text(fReceipt,font=("Times New Roman", 11, "normal"),background="#fff")
+txtReceipt.grid(row = 0, column = 0, padx = 5, pady = 5, sticky="nswe")
+
+# add scrollbar to receipt text
+scrollbar = tk.Scrollbar(fReceipt, orient = 'vertical', command = txtReceipt.yview, highlightbackground = "#e6ffe6", border = 5 )
+scrollbar.grid(row = 0, column = 1, sticky = "ns")
 #  communicate back to the scrollbar
-lReceipt['xscrollcommand'] = scrollbar.set
+txtReceipt['yscrollcommand'] = scrollbar.set
 
 main.mainloop()
 
