@@ -14,6 +14,7 @@ import myclasses as mc  # import module has Product class, Customer class, Order
 from datetime import datetime,timedelta # library for datetime object
 from tkcalendar import DateEntry    # library for calendar widgets
 import os   # import module use for get path of current source file.
+import myValidation # import module use for validate form field
 #--------------------------------------------------------------------------------------------------------------------
 
       
@@ -21,7 +22,7 @@ import os   # import module use for get path of current source file.
 # main window
 main = tk.Tk()
 main.title("Target")    
-main.geometry("1200x500")
+main.geometry("1200x600")
 main.configure(background = "#f2f2f2", padx = 2, pady = 2)
 
 #-------------------------------------------------Variables and Functions--------------------------------------------
@@ -53,7 +54,8 @@ vCustomerName = tk.StringVar()  # variable to get value of entry name of custome
 vCustomerAddress = tk.StringVar() # variable to get value of entry address of customer
 vCustomerEmail = tk.StringVar() # variable to value of entry email of customer
 vChoiceList = tk.StringVar()    # variable to link to text of label lChoiceList which display choosen products
-
+vInvalid    = tk.StringVar()    # variable to link to text of label lInvalid
+vIsValid    = tk.BooleanVar()   # variable to get result of validation
 # function: handler event when change selected item in combobox products or when press enter keys on combobox
 def addProduct():
     choiceProduct = productList[cbbProducts.current()]  # get selected item
@@ -66,6 +68,27 @@ def saveOrder():
     order = mc.Order(vCustomerName.get(), vCustomerAddress.get(), vCustomerEmail.get(),productListChoice,vDeliveryDate.get())
     txtReceipt.insert(0.0,order.displayOrder()) # display receipt in txtReceipt
     order.removeOrder() # using for demo, remove file after display receipt
+
+def checkName(event):
+    vIsValid = myValidation.invalidName(vCustomerName.get())
+    if vIsValid == tk.FALSE:
+        lNameValidation.config(text="!!! Name must be all characters",foreground='#ff0000')
+    else:
+        lNameValidation.config(text="Ok!",foreground='#000011')
+
+def checkAddress(event):
+    vIsValid = myValidation.invalidAddress(vCustomerAddress.get())
+    if vIsValid == tk.FALSE:
+        lAddressValidation.config(text="!!! Address must be all characters and numbers",foreground='#ff0000')
+    else:
+        lAddressValidation.config(text="Ok!",foreground='#000011')
+
+def checkEmail(event):
+    vIsValid = myValidation.invalidEmail(vCustomerEmail.get())
+    if vIsValid == tk.FALSE:
+        lEmailValidation.config(text="!!! Email should have abc@domain format",foreground='#ff0000')
+    else:
+        lEmailValidation.config(text="Ok!",foreground='#000011')       
 #--------------------------------------------------------------------------------------------------------------------  
 
 #------------------------------------------------------Controls------------------------------------------------------ 
@@ -110,26 +133,38 @@ fProducts.grid(row = 2,column = 0, sticky = "nsw")
 
 # create controls in frame customer info (fCustomer)
 subTitleFont = ("Comic Sans MS", 12, "bold")
+validationFont = ("Comic Sans MS",8, "italic")
 titleCustomerInfo = ttk.Label(fCustomer, font = subTitleFont, text="Delivery address", background = "#e6ffe6", foreground = "#003300")
 lCustomerName = ttk.Label(fCustomer, text = "Your name", background = "#e6ffe6")
 eCustomerName = ttk.Entry(fCustomer, textvariable = vCustomerName, width = 80)
+lNameValidation = ttk.Label(fCustomer, font = validationFont, text="Name must be all characters a-z or A-Z", background = "#e6ffe6",foreground="#008800")
 lCustomerAddress = ttk.Label(fCustomer,text = "Your address", background = "#e6ffe6")
 eCustomerAddress = ttk.Entry(fCustomer,textvariable = vCustomerAddress, width = 80)
+lAddressValidation = ttk.Label(fCustomer, font = validationFont, text="Address should be all characters and numbers", background = "#e6ffe6",foreground="#008800")
 lCustomerEmail = ttk.Label(fCustomer,text ="Your email", background = "#e6ffe6")
 eCustomerEmail = ttk.Entry(fCustomer,textvariable = vCustomerEmail, width = 80)
+lEmailValidation = ttk.Label(fCustomer, font = validationFont, text="For ex: abc@xyz.com", background = "#e6ffe6",foreground="#008800")
+
+
+# bind event to validation input field
+eCustomerName.bind('<Return>',checkName)
+eCustomerAddress.bind('<Return>',checkAddress)
+eCustomerEmail.bind('<Return>',checkEmail)
 
 # configure column and row of frame customer info (fCustomer)
 fCustomer.grid_columnconfigure(0, weight=1)
 fCustomer.grid_columnconfigure(1, weight=5)
-
 # place and display controls in fCustomer
 titleCustomerInfo.grid(row = 0, column = 0, sticky="nw", padx = 5, pady = 15)
 lCustomerName.grid(row = 1, column = 0, padx = 10, pady = 5, sticky="nw")
 eCustomerName.grid(row = 1, column = 1, padx = 0, pady = 5, sticky="nw")
-lCustomerAddress.grid(row = 2, column = 0, padx = 10, pady = 5, sticky="nw")
-eCustomerAddress.grid(row = 2, column = 1, padx = 0, pady = 5, sticky="nw")
-lCustomerEmail.grid(row = 3, column = 0, padx = 10, pady = 5, sticky="nw")
-eCustomerEmail.grid(row = 3, column = 1, padx = 0, pady = 5, sticky="nw")
+lNameValidation.grid(row = 2, column = 1, padx = 0, pady = 5, sticky="nw")
+lCustomerAddress.grid(row = 3, column = 0, padx = 10, pady = 5, sticky="nw")
+eCustomerAddress.grid(row = 3, column = 1, padx = 0, pady = 5, sticky="nw")
+lAddressValidation.grid(row = 4, column = 1, padx = 0, pady = 5, sticky="nw")
+lCustomerEmail.grid(row = 5, column = 0, padx = 10, pady = 5, sticky="nw")
+eCustomerEmail.grid(row = 5, column = 1, padx = 0, pady = 5, sticky="nw")
+lEmailValidation.grid(row = 6, column = 1, padx = 0, pady = 5, sticky="nw")
 
 # create controls in frame customer info (fProducts)
 titleProductInfo = ttk.Label(fProducts, text="Items", font = subTitleFont, background = "#e6ffe6", foreground = "#003300") 
@@ -141,7 +176,7 @@ calendar = DateEntry(fProducts, width=12, background='darkblue',
 
 # combobox list of products
 lProductName = ttk.Label(fProducts,text="Choose a product", background = "#e6ffe6", foreground = "#003300")
-cbbProducts = ttk.Combobox(fProducts, height=50, textvariable = vProductChoice)   # combobox contains products
+cbbProducts = ttk.Combobox(fProducts, height=40, textvariable = vProductChoice)   # combobox contains products
 cbbProducts['values'] = [str(x.productID)+"-"+x.name for x in productList]  # add data for combobox dropdownlist
 
 # load image using for image button
@@ -173,7 +208,6 @@ scrollbar2.grid(row = 2, column = 2, padx = 2, pady = 5, sticky = "nsew")
 lCalendar.grid(row = 3, column = 0, padx = 5, pady = 5, sticky = "nw")
 calendar.grid(row = 3, column = 1, padx = 10, pady = 5, sticky = "nw")
 btPlaceOrder.grid(row = 4, column = 0, columnspan = 3,  pady = 5, sticky = "ns")
-
 
 # configure row and column of rFrame to layout
 rFrame.grid_columnconfigure(0, weight=1)
