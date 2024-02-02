@@ -53,10 +53,12 @@ class Order(Customer):
     def addProducts(self, productList):
         subTotal = 0
         discount = 0
+        index = 1
         for item in productList:
-            receipt.storeProduct(str(self.orderID) + '.txt', item.name, str(item.price))
+            receipt.storeProduct(str(self.orderID) + '.txt',str(index)+". "+ item.name, str(item.price))
             subTotal += item.price - item.price * item.discount
             discount += item.price * item.discount
+            index +=1
         tax = 0.0775 * subTotal
         shippingCost = 0.05 * subTotal
         grandTotal = subTotal + shippingCost + tax

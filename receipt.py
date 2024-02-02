@@ -7,7 +7,7 @@ def storeCustomerInfo(filename, orderID, customerName, customerAddress, customer
         file.write("{}: {}\n".format("Delivery address".ljust(10),customerName))
         file.write("{}{}\n".format("".ljust(10+len("Customer Address")),customerAddress))
         file.write("{}: {}\n".format("Email address".ljust(10),customerEmail))
-        file.write("-"*100)
+        file.write("-"*30)
         file.write("\n\n")  
     finally:
         file.close()
@@ -20,7 +20,7 @@ def storeProduct(filename, productName, productPrice):
 def saveOrder(filename,subTotal,tax,shippingCost,grandTotal,discount = 0):
     try:
         file = open(filename,'a+',encoding = 'utf-8')
-        file.write('\n'+'-'*50+'\n')
+        file.write('\n'+'-'*10+'\n')
         file.write('{}: $ {:.2f}\n'.format('Discount'.ljust(25),discount))
         file.write('{}: $ {:.2f}\n'.format('SubTotal'.ljust(25),subTotal))
         file.write('{}: $ {:.2f}\n'.format('Tax'.ljust(28),tax))
