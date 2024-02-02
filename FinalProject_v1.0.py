@@ -69,27 +69,34 @@ def saveOrder():
     txtReceipt.insert(0.0,order.displayOrder()) # display receipt in txtReceipt
     order.removeOrder() # using for demo, remove file after display receipt
 
+# function: validate customer name input
 def checkName(event):
-    
-    vIsValid = myValidation.invalidName(vCustomerName.get())
+    vIsValid = myValidation.isValidName(vCustomerName.get())
     if vIsValid == tk.FALSE:
         lNameValidation.config(text="!!! Name must be all characters",foreground='#ff0000')
     else:
         lNameValidation.config(text="Ok!",foreground='#000011')
+        eCustomerAddress.focus_set()    # set focus on the next one
 
+
+    
+# function: validate customer address input
 def checkAddress(event):
-    vIsValid = myValidation.invalidAddress(vCustomerAddress.get())
+    vIsValid = myValidation.isValidAddress(vCustomerAddress.get())
     if vIsValid == tk.FALSE:
         lAddressValidation.config(text="!!! Address must be all characters and numbers",foreground='#ff0000')
     else:
         lAddressValidation.config(text="Ok!",foreground='#000011')
-
+        eCustomerEmail.focus_set()  # set focus on the next one
+        
 def checkEmail(event):
-    vIsValid = myValidation.invalidEmail(vCustomerEmail.get())
+    vIsValid = myValidation.isValidEmail(vCustomerEmail.get())
     if vIsValid == tk.FALSE:
-        lEmailValidation.config(text="!!! Email should have abc@domain format",foreground='#ff0000')
+        lEmailValidation.config(text="!!! Email should have a format as abc@domain",foreground='#ff0000')
     else:
-        lEmailValidation.config(text="Ok!",foreground='#000011')       
+        lEmailValidation.config(text="Ok!",foreground='#000011')   
+        cbbProducts.focus_set() # set focus on the next one    
+
 #--------------------------------------------------------------------------------------------------------------------  
 
 #------------------------------------------------------Controls------------------------------------------------------ 
@@ -151,12 +158,12 @@ lEmailValidation = ttk.Label(fCustomer, font = validationFont, text="For ex: abc
 eCustomerName.bind('<Return>',checkName)
 eCustomerAddress.bind('<Return>',checkAddress)
 eCustomerEmail.bind('<Return>',checkEmail)
-eCustomerName.bind('<Leave>',checkName)
-eCustomerAddress.bind('<Leave>',checkAddress)
-eCustomerEmail.bind('<Leave>',checkEmail)
+
 eCustomerName.bind('<Tab>',checkName)
 eCustomerAddress.bind('<Tab>',checkAddress)
 eCustomerEmail.bind('<Tab>',checkEmail)
+
+eCustomerName.focus_set()   # set focus on eCustomerName at first
 
 # configure column and row of frame customer info (fCustomer)
 fCustomer.grid_columnconfigure(0, weight=1)
