@@ -70,6 +70,7 @@ def saveOrder():
     order.removeOrder() # using for demo, remove file after display receipt
 
 def checkName(event):
+    
     vIsValid = myValidation.invalidName(vCustomerName.get())
     if vIsValid == tk.FALSE:
         lNameValidation.config(text="!!! Name must be all characters",foreground='#ff0000')
@@ -150,6 +151,12 @@ lEmailValidation = ttk.Label(fCustomer, font = validationFont, text="For ex: abc
 eCustomerName.bind('<Return>',checkName)
 eCustomerAddress.bind('<Return>',checkAddress)
 eCustomerEmail.bind('<Return>',checkEmail)
+eCustomerName.bind('<Leave>',checkName)
+eCustomerAddress.bind('<Leave>',checkAddress)
+eCustomerEmail.bind('<Leave>',checkEmail)
+eCustomerName.bind('<Tab>',checkName)
+eCustomerAddress.bind('<Tab>',checkAddress)
+eCustomerEmail.bind('<Tab>',checkEmail)
 
 # configure column and row of frame customer info (fCustomer)
 fCustomer.grid_columnconfigure(0, weight=1)
