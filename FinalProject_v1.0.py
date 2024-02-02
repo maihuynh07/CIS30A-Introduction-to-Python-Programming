@@ -67,7 +67,7 @@ def addProduct():
 def saveOrder():
     order = mc.Order(vCustomerName.get(), vCustomerAddress.get(), vCustomerEmail.get(),productListChoice,vDeliveryDate.get())
     txtReceipt.insert(0.0,order.displayOrder()) # display receipt in txtReceipt
-    order.removeOrder() # using for demo, remove file after display receipt
+    #order.removeOrder() # using for demo, remove file after display receipt
 
 # function: validate customer name input
 def checkName(event):
