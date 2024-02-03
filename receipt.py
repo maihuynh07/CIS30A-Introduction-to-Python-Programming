@@ -1,9 +1,10 @@
 # store selected product, save detail of a receipt: name of product, price, subtotal, tax, shippingCost, grandTotal, discount
 import os
-def storeCustomerInfo(filename, orderID, customerName, customerAddress, customerEmail):
+def storeCustomerInfo(filename, orderID, customerName, customerAddress, customerEmail, deliveryDate):
     try:
         file = open(filename,'a+',encoding = 'utf-8')
         file.write("\n{}: {}\n".format("Order ID",orderID))
+        file.write("{}: {}\n".format("Delivery date: ".ljust(10),deliveryDate))
         file.write("{}: {}\n".format("Delivery address".ljust(10),customerName))
         file.write("{}{}\n".format("".ljust(10+len("Customer Address")),customerAddress))
         file.write("{}: {}\n".format("Email address".ljust(10),customerEmail))

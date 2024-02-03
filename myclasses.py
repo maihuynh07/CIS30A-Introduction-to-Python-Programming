@@ -12,6 +12,7 @@ class Customer:
         
         Customer.amountCustomer += 1
         self.customerID = Customer.amountCustomer
+
     def printCustomer(self):
         print("Customer name:",self.name)
         
@@ -20,6 +21,7 @@ class Customer:
         self.address = address
         self.emailAddress = emailAddress
         self.customerID = self.amountCustomer
+
     def getID(self):
         return self.customerID
 # properties of a product
@@ -45,9 +47,10 @@ class Order(Customer):
         self.orderDate = datetime.datetime.now()
         self.productList = productList
         self.deliveryDate = deliveryDate
+        print("delivery date = ", deliveryDate)
         Order.amountOrder +=1
         self.orderID = Order.amountOrder
-        receipt.storeCustomerInfo(str(self.orderID) + '.txt',self.orderID,self.name,self.address,self.emailAddress)
+        receipt.storeCustomerInfo(str(self.orderID) + '.txt',self.orderID,self.name,self.address,self.emailAddress,self.deliveryDate)
         self.addProducts(productList)
           
     def addProducts(self, productList):
@@ -68,6 +71,7 @@ class Order(Customer):
         content = receipt.printOrder(str(self.orderID) + '.txt')
         print("Thank you for your shopping with us")
         return content
+    
     def removeOrder(self):
         isRemoved = receipt.removeOrder(str(self.orderID) + '.txt')
         if isRemoved == 1: print("Removed",str(self.orderID))
