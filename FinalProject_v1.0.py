@@ -27,7 +27,6 @@ main.configure(background = "#f2f2f2", padx = 2, pady = 2)
 
 #-------------------------------------------------Variables and Functions--------------------------------------------
 # initialize variables
-customer = mc.Customer()        # initialize a customer object
 dt = datetime.now() # datetime in current
 productList = [mc.Product("Jumbo blue berries - 9.8oz",5.02,0.2,dt+timedelta(days=2))
                ,mc.Product("Organic banabas - 2lb",1.99)
@@ -56,10 +55,10 @@ vCustomerEmail = tk.StringVar() # variable to value of entry email of customer
 vChoiceList = tk.StringVar()    # variable to link to text of label lChoiceList which display choosen products
 vInvalid    = tk.StringVar()    # variable to link to text of label lInvalid
 vIsValid    = tk.BooleanVar()   # variable to get result of validation
+
 # function: handler event when change selected item in combobox products or when press enter keys on combobox
 def addProduct():
     choiceProduct = productList[cbbProducts.current()]  # get selected item
-    vChoiceList.set(vChoiceList.get() + vProductChoice.get() + " $"+ str(choiceProduct.price) +"\n") # set variable that links to lProductChoice
     productListChoice.append(choiceProduct) # add choosen product from combobox into list choice product to list of choosen products
     lChoiceList.insert(tk.END,vProductChoice.get() + " $"+ str(choiceProduct.price)+"\n") # insert selected item to lChoiceList at the lastest position
 
@@ -78,8 +77,6 @@ def checkName(event):
         lNameValidation.config(text="Ok!",foreground='#000011')
         eCustomerAddress.focus_set()    # set focus on the next one
 
-
-    
 # function: validate customer address input
 def checkAddress(event):
     vIsValid = myValidation.isValidAddress(vCustomerAddress.get())
@@ -88,7 +85,8 @@ def checkAddress(event):
     else:
         lAddressValidation.config(text="Ok!",foreground='#000011')
         eCustomerEmail.focus_set()  # set focus on the next one
-        
+
+# function: validate customer email input        
 def checkEmail(event):
     vIsValid = myValidation.isValidEmail(vCustomerEmail.get())
     if vIsValid == tk.FALSE:
